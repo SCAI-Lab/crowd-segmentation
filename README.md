@@ -1,2 +1,22 @@
-# crowd-segmentation
-Segmentation of crowded spaces, with conversion from 3D lidar detections to visual scene descriptors
+# Real-time Crowd Segmentation from 2D/3D lidar person detections
+
+# Simulating crowds of people in Isaac Sim
+
+This repository...
+
+
+If you find this code relevant for your work, please consider citing one or both of these papers. A bibtex entry is provided below:
+```
+@article{hughes2023foundations,
+         title={TODO},
+         author={TODO},
+         year={2024},
+         eprint={xxxx.xxxxx},
+         archivePrefix={arXiv},
+         primaryClass={cs.RO}
+}
+```
+
+## Installation
+
+## Run
