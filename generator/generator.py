@@ -15,7 +15,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import logging
 
 from dataset.scene_class import SceneClassColour
-from dataset.utils.utilities import cartesian_to_polar, euler_to_rot, polar_to_cartesian, quat_to_euler
+from generator.utils.utilities import (
+    cartesian_to_polar,
+    euler_to_rot,
+    polar_to_cartesian,
+    quat_to_euler,
+)
 from generator.utils.detection import Detection
 
 logging.basicConfig(level=logging.INFO)
@@ -710,28 +715,22 @@ if __name__ == "__main__":
         "-i",
         type=str,
         help="Input file path",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/label_generation/defaced_2021-04-24-12-04-04/tracks/defaced_2021-04-24-12-04-04_filtered_lidar_odom.npy",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/label_generation/defaced_2021-12-03-19-12-00/tracks/defaced_2021-12-03-19-12-00_filtered_lidar_odom.npy",
         default=(
             f"{input_folder}/alg_res/tracks/{file_name}.npy"
             if dataformat == "CrowdBot"
             else f"{input_folder}/lidar_3d"
         ),
-        # default="/run/media/ryan/T7/master_thesis/JRDB/train_dataset_Crowdbot_format/tracking_JRDB_test2_processed/alg_res/tracks/tressider-2019-04-26_2_full.npy",
     )
     parser.add_argument(
         "--output",
         "-o",
         type=str,
         help="Output file path",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/label_generation/defaced_2021-04-24-12-04-04",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/label_generation/defaced_2021-12-03-19-12-00/",
         default=(
             f"{input_folder}/label_generation/{file_name}"
             if dataformat == "CrowdBot"
             else f"{input_folder}"
         ),
-        # default="/run/media/ryan/T7/master_thesis/JRDB/train_dataset_Crowdbot_format/tracking_JRDB_test2_processed/label_generation/treesider",
     )
 
     parser.add_argument(
@@ -754,20 +753,14 @@ if __name__ == "__main__":
         "-itf",
         type=str,
         help="Input path to tf frames (required if dataformat == CrowdBot)",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/source_data/tf_qolo/defaced_2021-04-24-12-04-04_filtered_lidar_odom_tfqolo_sampled.npy",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/source_data/tf_qolo/defaced_2021-12-03-19-12-00_filtered_lidar_odom_tfqolo_sampled.npy",
         default=f"{input_folder}/source_data/{tf_folder_name}/{file_name}_{tf_name}_sampled.npy",
-        # default="/run/media/ryan/T7/master_thesis/JRDB/train_dataset_Crowdbot_format/tracking_JRDB_test2_processed/source_data/tf_JRDB/tressider-2019-04-26_2_full_tfJRDB_sampled.npy",
     )
     parser.add_argument(
         "--input_vel",
         "-iv",
         type=str,
         help="Set input path for velocity data (required if dataformat == CrowdBot)",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/label_generation/defaced_2021-04-24-12-04-04/tracks/velocities/ped_vel-defaced_2021-04-24-12-04-04.npy",
-        # default="/run/media/ryan/T7/master_thesis/CrowdBot/lidar_odom_test2_processed/label_generation/defaced_2021-12-03-19-12-00/tracks/velocities/ped_vel-defaced_2021-12-03-19-12-00.npy",
         default=f"{input_folder}/alg_res/tracks/velocities/vel_{file_name}.npy",
-        # default="/run/media/ryan/T7/master_thesis/JRDB/train_dataset_Crowdbot_format/tracking_JRDB_test2_processed/alg_res/tracks/velocities/vel_tressider-2019-04-26_2.npy",
     )
 
     opts = parser.parse_args()
