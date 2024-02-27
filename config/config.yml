@@ -1,0 +1,39 @@
+# Dataset Options
+data_root: "/scai_data/data01/daav/isaac_sim_synthetic_data/label_generation" #"dataset"
+dataset: "daav" #"voc"
+num_classes: 7
+validation_dir: "None"
+
+# Deeplab Options
+model: "deeplabv3plus_mobilenet"
+separable_conv: False
+output_stride: 16 # choices = [8, 16]
+
+# Train Options
+test_only: False
+save_val_results: False
+total_itrs: 30000
+lr: 0.01
+lr_policy: "poly" # choices = [ "poly", "step" ]
+step_size: 10000
+crop_val: False
+batch_size: 16
+val_batch_size: 4
+crop_size: 255
+ckpt: None
+continue_training: False
+loss_type: "cross_entropy" # choices = [ "cross_entropy", "focal_loss" ]
+gpu_id: "0"
+weight_decay: 0.0001
+random_seed: 1
+print_interval: 10
+val_interval: 100
+download: False
+pretrained: False
+
+# Visualiser Options
+enable_vis: False
+vis_port: 8097
+vis_env: "main"
+vis_num_samples: 8
+  

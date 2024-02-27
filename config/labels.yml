@@ -1,0 +1,16 @@
+timestep: 0.1  # Time elapsed between two frames
+num_pixels: 256  # Number of pixel in one directional. Final image is square -> Total number of pixel num_pixel ** 2
+max_distance: 7  # Maximal detection distance of LiDAR sensor
+time_interval: 15  # Oldest data to influence for in latest input (is overriten by decay if decay type is linear)
+
+decay_type: "linear"  # Type of decay
+decay: 1  # Decay value between two input frames
+max_weight: 60  # Max weight added image each timestep
+input_occupancy_type: "gaussian_distribution"  # Type how occupancy of cells (input) is computed
+occupancy_variance: 0.02  # Set distribution of gaussian distribution (only available if input_occupancy_type is "gaussian_distribution")
+
+velocity_threshold: 0.1  # Threshold for velocity to decide between different crowd flows
+angle_threshold: 30  # Threshold for angle to decide between different crowd flows
+labelling_occupancy_type: "proximity"  # Type how occupancy of cells (labels) is computed
+search_radius: 1.0  # Radius how close if a person has to be to fill cell (only available for proximity occupancy type)
+detection_threshold: 3

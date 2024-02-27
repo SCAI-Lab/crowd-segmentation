@@ -1,0 +1,4 @@
+datefmt: '%H:%M:%S'
+filemode: a
+filename: /home/scai/dev/ros2_ws/src/isaac-crowds-sim/scene_classification/out/log_v0.txt
+format: '%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s'
