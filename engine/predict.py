@@ -21,6 +21,7 @@ from DeepLabV3Plus.network import convert_to_separable_conv, modeling
 from DeepLabV3Plus.utils import set_bn_momentum
 from engine.train import setup_logger
 from network.grayscale_layer import GrayscaleLayer
+from engine.utils.predict_img import predict_img
 import time
 
 
@@ -129,21 +130,26 @@ def main(cfg_path: str, input: str, save_location: Optional[str] = None, checkpo
     with torch.no_grad():
         start = time.time()
         model = model.eval()
-        for img_path in tqdm(image_files):
-            ext = os.path.basename(img_path).split(".")[-1]
-            img_name = os.path.basename(img_path)[: -len(ext) - 1]
-            if opts.dataset == "daav":
-                img = Image.open(img_path).convert("L")
-            else:
-                img = Image.open(img_path).convert("RGB")
-            img = transform(img).unsqueeze(0)  # To tensor of NCHW
-            img = img.to(device)
+        if opts.dataset == "daav":
+            for idx, img_path in enumerate(tqdm(image_files)):
+                ext = os.path.basename(img_path).split(".")[-1]
+                img_name = os.path.basename(img_path)[: -len(ext) - 1]
 
-            pred = model(img).max(1)[1].cpu().numpy()[0]  # HW
-            colorized_preds = decode_fn(pred).astype("uint8")
-            colorized_preds = Image.fromarray(colorized_preds)
-            if save_location:
-                colorized_preds.save(os.path.join(save_location, img_name + ".png"))
+                pred_img_path = f"{save_location}/{img_name}.png"
+                predict_img(model=model, device=device, input_img_path=img_path, predict_img_path=pred_img_path)
+        else:
+            for img_path in tqdm(image_files):
+                ext = os.path.basename(img_path).split(".")[-1]
+                img_name = os.path.basename(img_path)[: -len(ext) - 1]
+                img = Image.open(img_path).convert("RGB")
+                img = transform(img).unsqueeze(0)  # To tensor of NCHW
+                img = img.to(device)
+
+                pred = model(img).max(1)[1].cpu().numpy()[0]  # HW
+                colorized_preds = decode_fn(pred).astype("uint8")
+                colorized_preds = Image.fromarray(colorized_preds)
+                if save_location:
+                    colorized_preds.save(os.path.join(save_location, img_name + ".png"))
         
         duration = time.time() - start
         print(f"Average calculation time: {duration/len(image_files)}")
