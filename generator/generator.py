@@ -15,13 +15,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import logging
 
 from dataset.scene_class import SceneClassColour
+from generator.utils.detection import Detection
 from generator.utils.utilities import (
     cartesian_to_polar,
     euler_to_rot,
     polar_to_cartesian,
     quat_to_euler,
 )
-from generator.utils.detection import Detection
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()

@@ -1,7 +1,9 @@
+import argparse
 import os
 import sys
 from argparse import Namespace
 from glob import glob
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -9,23 +11,28 @@ import yaml
 from PIL import Image
 from torchvision import transforms
 from tqdm import tqdm
-from typing import Optional
-import argparse
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(os.path.join(os.path.dirname(__file__), "../DeepLabV3Plus"))
+
+import time
 
 from dataset.loader import TorchDataset
 from DeepLabV3Plus.datasets import Cityscapes, VOCSegmentation
 from DeepLabV3Plus.network import convert_to_separable_conv, modeling
 from DeepLabV3Plus.utils import set_bn_momentum
 from engine.train import setup_logger
-from network.grayscale_layer import GrayscaleLayer
 from engine.utils.predict_img import predict_img
-import time
+from network.grayscale_layer import GrayscaleLayer
 
 
-def main(cfg_path: str, input: str, save_location: Optional[str] = None, checkpoint_path: Optional[str] = None, version: str = "default") -> None:
+def main(
+    cfg_path: str,
+    input: str,
+    save_location: Optional[str] = None,
+    checkpoint_path: Optional[str] = None,
+    version: str = "default",
+) -> None:
     logger = setup_logger(f"prediction_logger_{version}")
 
     with open(cfg_path, "r") as f:
@@ -59,9 +66,7 @@ def main(cfg_path: str, input: str, save_location: Optional[str] = None, checkpo
         image_files.append(opts.input)
 
     # Set up model (all models are 'constructed at network.modeling)
-    model = modeling.__dict__[opts.model](
-        num_classes=21, output_stride=opts.output_stride
-    )
+    model = modeling.__dict__[opts.model](num_classes=21, output_stride=opts.output_stride)
     if opts.separable_conv and "plus" in opts.model:
         convert_to_separable_conv(model.classifier)
     set_bn_momentum(model.backbone, momentum=0.01)
@@ -136,7 +141,12 @@ def main(cfg_path: str, input: str, save_location: Optional[str] = None, checkpo
                 img_name = os.path.basename(img_path)[: -len(ext) - 1]
 
                 pred_img_path = f"{save_location}/{img_name}.png"
-                predict_img(model=model, device=device, input_img_path=img_path, predict_img_path=pred_img_path)
+                predict_img(
+                    model=model,
+                    device=device,
+                    input_img_path=img_path,
+                    predict_img_path=pred_img_path,
+                )
         else:
             for img_path in tqdm(image_files):
                 ext = os.path.basename(img_path).split(".")[-1]
@@ -150,10 +160,9 @@ def main(cfg_path: str, input: str, save_location: Optional[str] = None, checkpo
                 colorized_preds = Image.fromarray(colorized_preds)
                 if save_location:
                     colorized_preds.save(os.path.join(save_location, img_name + ".png"))
-        
+
         duration = time.time() - start
         print(f"Average calculation time: {duration/len(image_files)}")
-        
 
 
 if __name__ == "__main__":
@@ -183,4 +192,9 @@ if __name__ == "__main__":
     )
 
     opts = parser.parse_args()
-    main(cfg_path=config_path, input=opts.input, save_location=opts.output, checkpoint_path=opts.checkpoint)
+    main(
+        cfg_path=config_path,
+        input=opts.input,
+        save_location=opts.output,
+        checkpoint_path=opts.checkpoint,
+    )
